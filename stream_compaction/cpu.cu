@@ -28,6 +28,16 @@ namespace StreamCompaction {
             timer().endCpuTimer();
         }
 
+        // Exact same as scan() , except it does not start a timer.
+        // Exists soley for timing purposes within compactWithScan()
+        void scanUntimed(int n, int* odata, const int* idata) {
+          int prefix = 0;
+          for (int i = 0; i < n; i++) {
+            odata[i] = prefix;
+            prefix += idata[i];
+          }
+        }
+
         /**
          * CPU stream compaction without using the scan function.
          *
@@ -63,7 +73,7 @@ namespace StreamCompaction {
               temp[i] = (idata[i] != 0) ? 1 : 0;
             }
 
-            scan(n, scanned, temp);
+            scanUntimed(n, scanned, temp);
 
             for (int i = 0; i < n; i++) {
               if (temp[i] == 1) {
