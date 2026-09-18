@@ -30,7 +30,7 @@ The average time was computed by averaging 10 runs of the "Work-Efficient" scan 
 #### Exclusive Scan Performance vs Elapsed Time
 This graph compares the average elapsed time of each scan implementation at specific array sizes. Each implementations time at an array size was the average timing of 10 trials.
 
-![scan_performance.png](/Project2-Stream-Compaction/img/scan_performance.png)
+![scan_performance.png](/img/scan_performance.png)
 
 | number of elements  | CPU (ms) | Naive (ms) | Work Efficient (Global) ms | Thrust    |
 |---------------------|---------|----------|-------------------------|-----------|
@@ -55,7 +55,7 @@ As the number of elements grow `>= 2^20`, we see that my GPU implementations (Na
 The Thrust `exclusive_scan` implemntation was by far the most effective, unsurprisingly. 
 
 #### Thrust Exclusive Scan
-![thrust_nsight.png](/Project2-Stream-Compaction/img/thrust_nsight.png)
+![thrust_nsight.png](/img/thrust_nsight.png)
 
 Within this Nsight profiling screenshot, `thrust::exclusive_scan` executes for `[2.873 ms]`. It appears that Thrust allocates temporary device memory with cudaMalloc, launches the internal GPU work, synchronizes the CUDA stream, and then frees the temporary allocation with cudaFree. Most of this kernels duration is spent inside cudaStreamSynchronize, waiting on all threads to finish. It is notable that the internal memory allocation and deallocation takes `~410μs`, which is ~14% of the execution time.
 
